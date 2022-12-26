@@ -2,7 +2,7 @@ import { Head } from "$fresh/runtime.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { PrismaClient } from '../generated/client/deno/edge.ts';
 import { Prisma } from '../generated/client/index.d.ts';
-import { setCookie } from "https://deno.land/std@0.167.0/http/cookie.ts";
+import { getCookies, setCookie } from "https://deno.land/std@0.167.0/http/cookie.ts";
 import { create, decode } from "https://deno.land/x/djwt@v2.8/mod.ts";
 import * as bcrypt from "https://deno.land/x/bcrypt@v0.3.0/mod.ts";
 
@@ -16,13 +16,59 @@ type UserInput = {
   message: string;
 }
 
-export const handler: Handlers<UserInput | null> = {
-  GET(_, ctx) {
-    return ctx.render({
-      email: '',
-      name: '',
-      password: '',
-      message: ''
+type JwtPayload = {
+  userId: number;
+  exp: number
+}
+
+export const handler: Handlers<UserInput> = { 
+  async GET(req, ctx) {
+    const cookie = getCookies(req.headers)['passkey-example-session']
+    if (!cookie) {
+      return ctx.render({
+        email: '',
+        name: '',
+        password: '',
+        message: ''
+      });
+    }
+
+    const [headers, payload, signature] = decode(cookie)
+
+    const date = new Date();
+    const payloadJwt = payload as JwtPayload;
+    if (payloadJwt['exp'] < Number(date)) {
+      // jwtの期限が切れている場合
+      return ctx.render({
+        email: '',
+        name: '',
+        password: '',
+        message: ''
+      });
+    }
+
+    const userId = await prisma.user.findFirst({where: {id: payloadJwt.userId}});
+
+    if (!userId) {
+      // userIdがDBに存在しない場合
+      return ctx.render({
+        email: '',
+        name: '',
+        password: '',
+        message: ''
+      });
+    }
+
+    if (req.referrer) {
+      return new Response("", {
+        status: 303,
+        headers: { Location: req.referrer },
+      });  
+    }
+
+    return new Response("", {
+      status: 303,
+      headers: { Location: "/" },
     });
   },
   async POST(req: Request, ctx) {
@@ -69,13 +115,18 @@ export const handler: Handlers<UserInput | null> = {
     const dt = new Date
     dt.setDate(dt.getDate() + 10);
 
-    const jwt = await create({ alg: "HS512", typ: "JWT" }, { user_id: userResponse.id, exp: Number(dt) }, key);
-    const response = await ctx.render({
-      email: '',
-      name: '',
-      password: '',
-      message: ''
+    const jwt = await create({ alg: "HS512", typ: "JWT" }, { userId: userResponse.id, exp: Number(dt) }, key);
+    const response = new Response("", {
+      status: 303,
+      headers: { Location: "/" },
     });
+
+    // const response = await ctx.render({
+    //   email: '',
+    //   name: '',
+    //   password: '',
+    //   message: ''
+    // })
 
     setCookie(response.headers, {
       name: "passkey-example-session",

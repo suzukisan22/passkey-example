@@ -1,5 +1,10 @@
 import { Head } from "$fresh/runtime.ts";
 import Counter from "../islands/Counter.tsx";
+import { HandlerContext } from "$fresh/server.ts";
+
+export const handler = async (_req: Request, ctx: HandlerContext): Promise<Response> => {
+  return await ctx.render()
+};
 
 export default function Home() {
   return (
