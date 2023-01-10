@@ -3,7 +3,7 @@
  * Client
 **/
 
-import * as runtime from './runtime/index.d.ts';
+import * as runtime from './runtime/index';
 declare const prisma: unique symbol
 export type PrismaPromise<A> = Promise<A> & {[prisma]: true}
 type UnwrapPromise<P extends any> = P extends Promise<infer R> ? R : P
@@ -21,6 +21,18 @@ export type User = {
   email: string
   name: string | null
   password_digest: string
+}
+
+/**
+ * Model Passkey
+ * 
+ */
+export type Passkey = {
+  id: number
+  credentialId: string
+  userId: number
+  publicKey: string
+  transports: string[]
 }
 
 
@@ -150,6 +162,16 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<GlobalReject>;
+
+  /**
+   * `prisma.passkey`: Exposes CRUD operations for the **Passkey** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Passkeys
+    * const passkeys = await prisma.passkey.findMany()
+    * ```
+    */
+  get passkey(): Prisma.PasskeyDelegate<GlobalReject>;
 }
 
 export namespace Prisma {
@@ -634,7 +656,8 @@ export namespace Prisma {
   }
 
   export const ModelName: {
-    User: 'User'
+    User: 'User',
+    Passkey: 'Passkey'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -796,6 +819,49 @@ export namespace Prisma {
   /**
    * Count Types
    */
+
+
+  /**
+   * Count Type UserCountOutputType
+   */
+
+
+  export type UserCountOutputType = {
+    passkeys: number
+  }
+
+  export type UserCountOutputTypeSelect = {
+    passkeys?: boolean
+  }
+
+  export type UserCountOutputTypeGetPayload<S extends boolean | null | undefined | UserCountOutputTypeArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? UserCountOutputType :
+    S extends undefined ? never :
+    S extends { include: any } & (UserCountOutputTypeArgs)
+    ? UserCountOutputType 
+    : S extends { select: any } & (UserCountOutputTypeArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+    P extends keyof UserCountOutputType ? UserCountOutputType[P] : never
+  } 
+      : UserCountOutputType
+
+
+
+
+  // Custom InputTypes
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeArgs = {
+    /**
+     * Select specific fields to fetch from the UserCountOutputType
+     * 
+    **/
+    select?: UserCountOutputTypeSelect | null
+  }
 
 
 
@@ -1000,19 +1066,31 @@ export namespace Prisma {
     email?: boolean
     name?: boolean
     password_digest?: boolean
+    passkeys?: boolean | PasskeyFindManyArgs
+    _count?: boolean | UserCountOutputTypeArgs
   }
 
+
+  export type UserInclude = {
+    passkeys?: boolean | PasskeyFindManyArgs
+    _count?: boolean | UserCountOutputTypeArgs
+  } 
 
   export type UserGetPayload<S extends boolean | null | undefined | UserArgs> =
     S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
     S extends true ? User :
     S extends undefined ? never :
     S extends { include: any } & (UserArgs | UserFindManyArgs)
-    ? User 
+    ? User  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'passkeys' ? Array < PasskeyGetPayload<S['include'][P]>>  :
+        P extends '_count' ? UserCountOutputTypeGetPayload<S['include'][P]> :  never
+  } 
     : S extends { select: any } & (UserArgs | UserFindManyArgs)
       ? {
     [P in TruthyKeys<S['select']>]:
-    P extends keyof User ? User[P] : never
+        P extends 'passkeys' ? Array < PasskeyGetPayload<S['select'][P]>>  :
+        P extends '_count' ? UserCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof User ? User[P] : never
   } 
       : User
 
@@ -1386,6 +1464,7 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
+    passkeys<T extends PasskeyFindManyArgs= {}>(args?: Subset<T, PasskeyFindManyArgs>): PrismaPromise<Array<PasskeyGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -1424,6 +1503,11 @@ export namespace Prisma {
     **/
     select?: UserSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: UserInclude | null
+    /**
      * Filter, which User to fetch.
      * 
     **/
@@ -1452,6 +1536,11 @@ export namespace Prisma {
     **/
     select?: UserSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: UserInclude | null
+    /**
      * Filter, which User to fetch.
      * 
     **/
@@ -1468,6 +1557,11 @@ export namespace Prisma {
      * 
     **/
     select?: UserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: UserInclude | null
     /**
      * Filter, which User to fetch.
      * 
@@ -1532,6 +1626,11 @@ export namespace Prisma {
     **/
     select?: UserSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: UserInclude | null
+    /**
      * Filter, which User to fetch.
      * 
     **/
@@ -1584,6 +1683,11 @@ export namespace Prisma {
     **/
     select?: UserSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: UserInclude | null
+    /**
      * Filter, which Users to fetch.
      * 
     **/
@@ -1630,6 +1734,11 @@ export namespace Prisma {
     **/
     select?: UserSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: UserInclude | null
+    /**
      * The data needed to create a User.
      * 
     **/
@@ -1659,6 +1768,11 @@ export namespace Prisma {
      * 
     **/
     select?: UserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: UserInclude | null
     /**
      * The data needed to update a User.
      * 
@@ -1699,6 +1813,11 @@ export namespace Prisma {
     **/
     select?: UserSelect | null
     /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: UserInclude | null
+    /**
      * The filter to search for the User to update in case it exists.
      * 
     **/
@@ -1725,6 +1844,11 @@ export namespace Prisma {
      * 
     **/
     select?: UserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: UserInclude | null
     /**
      * Filter which User to delete.
      * 
@@ -1754,6 +1878,1033 @@ export namespace Prisma {
      * 
     **/
     select?: UserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: UserInclude | null
+  }
+
+
+
+  /**
+   * Model Passkey
+   */
+
+
+  export type AggregatePasskey = {
+    _count: PasskeyCountAggregateOutputType | null
+    _avg: PasskeyAvgAggregateOutputType | null
+    _sum: PasskeySumAggregateOutputType | null
+    _min: PasskeyMinAggregateOutputType | null
+    _max: PasskeyMaxAggregateOutputType | null
+  }
+
+  export type PasskeyAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+  }
+
+  export type PasskeySumAggregateOutputType = {
+    id: number | null
+    userId: number | null
+  }
+
+  export type PasskeyMinAggregateOutputType = {
+    id: number | null
+    credentialId: string | null
+    userId: number | null
+    publicKey: string | null
+  }
+
+  export type PasskeyMaxAggregateOutputType = {
+    id: number | null
+    credentialId: string | null
+    userId: number | null
+    publicKey: string | null
+  }
+
+  export type PasskeyCountAggregateOutputType = {
+    id: number
+    credentialId: number
+    userId: number
+    publicKey: number
+    transports: number
+    _all: number
+  }
+
+
+  export type PasskeyAvgAggregateInputType = {
+    id?: true
+    userId?: true
+  }
+
+  export type PasskeySumAggregateInputType = {
+    id?: true
+    userId?: true
+  }
+
+  export type PasskeyMinAggregateInputType = {
+    id?: true
+    credentialId?: true
+    userId?: true
+    publicKey?: true
+  }
+
+  export type PasskeyMaxAggregateInputType = {
+    id?: true
+    credentialId?: true
+    userId?: true
+    publicKey?: true
+  }
+
+  export type PasskeyCountAggregateInputType = {
+    id?: true
+    credentialId?: true
+    userId?: true
+    publicKey?: true
+    transports?: true
+    _all?: true
+  }
+
+  export type PasskeyAggregateArgs = {
+    /**
+     * Filter which Passkey to aggregate.
+     * 
+    **/
+    where?: PasskeyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Passkeys to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<PasskeyOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: PasskeyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Passkeys from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Passkeys.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Passkeys
+    **/
+    _count?: true | PasskeyCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PasskeyAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PasskeySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PasskeyMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PasskeyMaxAggregateInputType
+  }
+
+  export type GetPasskeyAggregateType<T extends PasskeyAggregateArgs> = {
+        [P in keyof T & keyof AggregatePasskey]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePasskey[P]>
+      : GetScalarType<T[P], AggregatePasskey[P]>
+  }
+
+
+
+
+  export type PasskeyGroupByArgs = {
+    where?: PasskeyWhereInput
+    orderBy?: Enumerable<PasskeyOrderByWithAggregationInput>
+    by: Array<PasskeyScalarFieldEnum>
+    having?: PasskeyScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PasskeyCountAggregateInputType | true
+    _avg?: PasskeyAvgAggregateInputType
+    _sum?: PasskeySumAggregateInputType
+    _min?: PasskeyMinAggregateInputType
+    _max?: PasskeyMaxAggregateInputType
+  }
+
+
+  export type PasskeyGroupByOutputType = {
+    id: number
+    credentialId: string
+    userId: number
+    publicKey: string
+    transports: string[]
+    _count: PasskeyCountAggregateOutputType | null
+    _avg: PasskeyAvgAggregateOutputType | null
+    _sum: PasskeySumAggregateOutputType | null
+    _min: PasskeyMinAggregateOutputType | null
+    _max: PasskeyMaxAggregateOutputType | null
+  }
+
+  type GetPasskeyGroupByPayload<T extends PasskeyGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<PasskeyGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PasskeyGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PasskeyGroupByOutputType[P]>
+            : GetScalarType<T[P], PasskeyGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PasskeySelect = {
+    id?: boolean
+    credentialId?: boolean
+    userId?: boolean
+    publicKey?: boolean
+    transports?: boolean
+    user?: boolean | UserArgs
+  }
+
+
+  export type PasskeyInclude = {
+    user?: boolean | UserArgs
+  } 
+
+  export type PasskeyGetPayload<S extends boolean | null | undefined | PasskeyArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? Passkey :
+    S extends undefined ? never :
+    S extends { include: any } & (PasskeyArgs | PasskeyFindManyArgs)
+    ? Passkey  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'user' ? UserGetPayload<S['include'][P]> :  never
+  } 
+    : S extends { select: any } & (PasskeyArgs | PasskeyFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+        P extends 'user' ? UserGetPayload<S['select'][P]> :  P extends keyof Passkey ? Passkey[P] : never
+  } 
+      : Passkey
+
+
+  type PasskeyCountArgs = Merge<
+    Omit<PasskeyFindManyArgs, 'select' | 'include'> & {
+      select?: PasskeyCountAggregateInputType | true
+    }
+  >
+
+  export interface PasskeyDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one Passkey that matches the filter.
+     * @param {PasskeyFindUniqueArgs} args - Arguments to find a Passkey
+     * @example
+     * // Get one Passkey
+     * const passkey = await prisma.passkey.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends PasskeyFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, PasskeyFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Passkey'> extends True ? Prisma__PasskeyClient<PasskeyGetPayload<T>> : Prisma__PasskeyClient<PasskeyGetPayload<T> | null, null>
+
+    /**
+     * Find one Passkey that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {PasskeyFindUniqueOrThrowArgs} args - Arguments to find a Passkey
+     * @example
+     * // Get one Passkey
+     * const passkey = await prisma.passkey.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends PasskeyFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, PasskeyFindUniqueOrThrowArgs>
+    ): Prisma__PasskeyClient<PasskeyGetPayload<T>>
+
+    /**
+     * Find the first Passkey that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PasskeyFindFirstArgs} args - Arguments to find a Passkey
+     * @example
+     * // Get one Passkey
+     * const passkey = await prisma.passkey.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends PasskeyFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, PasskeyFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Passkey'> extends True ? Prisma__PasskeyClient<PasskeyGetPayload<T>> : Prisma__PasskeyClient<PasskeyGetPayload<T> | null, null>
+
+    /**
+     * Find the first Passkey that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PasskeyFindFirstOrThrowArgs} args - Arguments to find a Passkey
+     * @example
+     * // Get one Passkey
+     * const passkey = await prisma.passkey.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends PasskeyFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, PasskeyFindFirstOrThrowArgs>
+    ): Prisma__PasskeyClient<PasskeyGetPayload<T>>
+
+    /**
+     * Find zero or more Passkeys that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PasskeyFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Passkeys
+     * const passkeys = await prisma.passkey.findMany()
+     * 
+     * // Get first 10 Passkeys
+     * const passkeys = await prisma.passkey.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const passkeyWithIdOnly = await prisma.passkey.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends PasskeyFindManyArgs>(
+      args?: SelectSubset<T, PasskeyFindManyArgs>
+    ): PrismaPromise<Array<PasskeyGetPayload<T>>>
+
+    /**
+     * Create a Passkey.
+     * @param {PasskeyCreateArgs} args - Arguments to create a Passkey.
+     * @example
+     * // Create one Passkey
+     * const Passkey = await prisma.passkey.create({
+     *   data: {
+     *     // ... data to create a Passkey
+     *   }
+     * })
+     * 
+    **/
+    create<T extends PasskeyCreateArgs>(
+      args: SelectSubset<T, PasskeyCreateArgs>
+    ): Prisma__PasskeyClient<PasskeyGetPayload<T>>
+
+    /**
+     * Create many Passkeys.
+     *     @param {PasskeyCreateManyArgs} args - Arguments to create many Passkeys.
+     *     @example
+     *     // Create many Passkeys
+     *     const passkey = await prisma.passkey.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends PasskeyCreateManyArgs>(
+      args?: SelectSubset<T, PasskeyCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Passkey.
+     * @param {PasskeyDeleteArgs} args - Arguments to delete one Passkey.
+     * @example
+     * // Delete one Passkey
+     * const Passkey = await prisma.passkey.delete({
+     *   where: {
+     *     // ... filter to delete one Passkey
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends PasskeyDeleteArgs>(
+      args: SelectSubset<T, PasskeyDeleteArgs>
+    ): Prisma__PasskeyClient<PasskeyGetPayload<T>>
+
+    /**
+     * Update one Passkey.
+     * @param {PasskeyUpdateArgs} args - Arguments to update one Passkey.
+     * @example
+     * // Update one Passkey
+     * const passkey = await prisma.passkey.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends PasskeyUpdateArgs>(
+      args: SelectSubset<T, PasskeyUpdateArgs>
+    ): Prisma__PasskeyClient<PasskeyGetPayload<T>>
+
+    /**
+     * Delete zero or more Passkeys.
+     * @param {PasskeyDeleteManyArgs} args - Arguments to filter Passkeys to delete.
+     * @example
+     * // Delete a few Passkeys
+     * const { count } = await prisma.passkey.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends PasskeyDeleteManyArgs>(
+      args?: SelectSubset<T, PasskeyDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Passkeys.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PasskeyUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Passkeys
+     * const passkey = await prisma.passkey.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends PasskeyUpdateManyArgs>(
+      args: SelectSubset<T, PasskeyUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Passkey.
+     * @param {PasskeyUpsertArgs} args - Arguments to update or create a Passkey.
+     * @example
+     * // Update or create a Passkey
+     * const passkey = await prisma.passkey.upsert({
+     *   create: {
+     *     // ... data to create a Passkey
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Passkey we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends PasskeyUpsertArgs>(
+      args: SelectSubset<T, PasskeyUpsertArgs>
+    ): Prisma__PasskeyClient<PasskeyGetPayload<T>>
+
+    /**
+     * Count the number of Passkeys.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PasskeyCountArgs} args - Arguments to filter Passkeys to count.
+     * @example
+     * // Count the number of Passkeys
+     * const count = await prisma.passkey.count({
+     *   where: {
+     *     // ... the filter for the Passkeys we want to count
+     *   }
+     * })
+    **/
+    count<T extends PasskeyCountArgs>(
+      args?: Subset<T, PasskeyCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PasskeyCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Passkey.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PasskeyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PasskeyAggregateArgs>(args: Subset<T, PasskeyAggregateArgs>): PrismaPromise<GetPasskeyAggregateType<T>>
+
+    /**
+     * Group by Passkey.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PasskeyGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PasskeyGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PasskeyGroupByArgs['orderBy'] }
+        : { orderBy?: PasskeyGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PasskeyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPasskeyGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Passkey.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__PasskeyClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    user<T extends UserArgs= {}>(args?: Subset<T, UserArgs>): Prisma__UserClient<UserGetPayload<T> | Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * Passkey base type for findUnique actions
+   */
+  export type PasskeyFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the Passkey
+     * 
+    **/
+    select?: PasskeySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PasskeyInclude | null
+    /**
+     * Filter, which Passkey to fetch.
+     * 
+    **/
+    where: PasskeyWhereUniqueInput
+  }
+
+  /**
+   * Passkey: findUnique
+   */
+  export interface PasskeyFindUniqueArgs extends PasskeyFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Passkey findUniqueOrThrow
+   */
+  export type PasskeyFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the Passkey
+     * 
+    **/
+    select?: PasskeySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PasskeyInclude | null
+    /**
+     * Filter, which Passkey to fetch.
+     * 
+    **/
+    where: PasskeyWhereUniqueInput
+  }
+
+
+  /**
+   * Passkey base type for findFirst actions
+   */
+  export type PasskeyFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the Passkey
+     * 
+    **/
+    select?: PasskeySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PasskeyInclude | null
+    /**
+     * Filter, which Passkey to fetch.
+     * 
+    **/
+    where?: PasskeyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Passkeys to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<PasskeyOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Passkeys.
+     * 
+    **/
+    cursor?: PasskeyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Passkeys from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Passkeys.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Passkeys.
+     * 
+    **/
+    distinct?: Enumerable<PasskeyScalarFieldEnum>
+  }
+
+  /**
+   * Passkey: findFirst
+   */
+  export interface PasskeyFindFirstArgs extends PasskeyFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Passkey findFirstOrThrow
+   */
+  export type PasskeyFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the Passkey
+     * 
+    **/
+    select?: PasskeySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PasskeyInclude | null
+    /**
+     * Filter, which Passkey to fetch.
+     * 
+    **/
+    where?: PasskeyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Passkeys to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<PasskeyOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Passkeys.
+     * 
+    **/
+    cursor?: PasskeyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Passkeys from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Passkeys.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Passkeys.
+     * 
+    **/
+    distinct?: Enumerable<PasskeyScalarFieldEnum>
+  }
+
+
+  /**
+   * Passkey findMany
+   */
+  export type PasskeyFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the Passkey
+     * 
+    **/
+    select?: PasskeySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PasskeyInclude | null
+    /**
+     * Filter, which Passkeys to fetch.
+     * 
+    **/
+    where?: PasskeyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Passkeys to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<PasskeyOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Passkeys.
+     * 
+    **/
+    cursor?: PasskeyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Passkeys from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Passkeys.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<PasskeyScalarFieldEnum>
+  }
+
+
+  /**
+   * Passkey create
+   */
+  export type PasskeyCreateArgs = {
+    /**
+     * Select specific fields to fetch from the Passkey
+     * 
+    **/
+    select?: PasskeySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PasskeyInclude | null
+    /**
+     * The data needed to create a Passkey.
+     * 
+    **/
+    data: XOR<PasskeyCreateInput, PasskeyUncheckedCreateInput>
+  }
+
+
+  /**
+   * Passkey createMany
+   */
+  export type PasskeyCreateManyArgs = {
+    /**
+     * The data used to create many Passkeys.
+     * 
+    **/
+    data: Enumerable<PasskeyCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * Passkey update
+   */
+  export type PasskeyUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the Passkey
+     * 
+    **/
+    select?: PasskeySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PasskeyInclude | null
+    /**
+     * The data needed to update a Passkey.
+     * 
+    **/
+    data: XOR<PasskeyUpdateInput, PasskeyUncheckedUpdateInput>
+    /**
+     * Choose, which Passkey to update.
+     * 
+    **/
+    where: PasskeyWhereUniqueInput
+  }
+
+
+  /**
+   * Passkey updateMany
+   */
+  export type PasskeyUpdateManyArgs = {
+    /**
+     * The data used to update Passkeys.
+     * 
+    **/
+    data: XOR<PasskeyUpdateManyMutationInput, PasskeyUncheckedUpdateManyInput>
+    /**
+     * Filter which Passkeys to update
+     * 
+    **/
+    where?: PasskeyWhereInput
+  }
+
+
+  /**
+   * Passkey upsert
+   */
+  export type PasskeyUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the Passkey
+     * 
+    **/
+    select?: PasskeySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PasskeyInclude | null
+    /**
+     * The filter to search for the Passkey to update in case it exists.
+     * 
+    **/
+    where: PasskeyWhereUniqueInput
+    /**
+     * In case the Passkey found by the `where` argument doesn't exist, create a new Passkey with this data.
+     * 
+    **/
+    create: XOR<PasskeyCreateInput, PasskeyUncheckedCreateInput>
+    /**
+     * In case the Passkey was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<PasskeyUpdateInput, PasskeyUncheckedUpdateInput>
+  }
+
+
+  /**
+   * Passkey delete
+   */
+  export type PasskeyDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the Passkey
+     * 
+    **/
+    select?: PasskeySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PasskeyInclude | null
+    /**
+     * Filter which Passkey to delete.
+     * 
+    **/
+    where: PasskeyWhereUniqueInput
+  }
+
+
+  /**
+   * Passkey deleteMany
+   */
+  export type PasskeyDeleteManyArgs = {
+    /**
+     * Filter which Passkeys to delete
+     * 
+    **/
+    where?: PasskeyWhereInput
+  }
+
+
+  /**
+   * Passkey without action
+   */
+  export type PasskeyArgs = {
+    /**
+     * Select specific fields to fetch from the Passkey
+     * 
+    **/
+    select?: PasskeySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: PasskeyInclude | null
   }
 
 
@@ -1764,6 +2915,17 @@ export namespace Prisma {
 
   // Based on
   // https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
+
+  export const PasskeyScalarFieldEnum: {
+    id: 'id',
+    credentialId: 'credentialId',
+    userId: 'userId',
+    publicKey: 'publicKey',
+    transports: 'transports'
+  };
+
+  export type PasskeyScalarFieldEnum = (typeof PasskeyScalarFieldEnum)[keyof typeof PasskeyScalarFieldEnum]
+
 
   export const QueryMode: {
     default: 'default',
@@ -1814,6 +2976,7 @@ export namespace Prisma {
     email?: StringFilter | string
     name?: StringNullableFilter | string | null
     password_digest?: StringFilter | string
+    passkeys?: PasskeyListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -1821,6 +2984,7 @@ export namespace Prisma {
     email?: SortOrder
     name?: SortOrder
     password_digest?: SortOrder
+    passkeys?: PasskeyOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = {
@@ -1850,10 +3014,60 @@ export namespace Prisma {
     password_digest?: StringWithAggregatesFilter | string
   }
 
+  export type PasskeyWhereInput = {
+    AND?: Enumerable<PasskeyWhereInput>
+    OR?: Enumerable<PasskeyWhereInput>
+    NOT?: Enumerable<PasskeyWhereInput>
+    id?: IntFilter | number
+    credentialId?: StringFilter | string
+    userId?: IntFilter | number
+    publicKey?: StringFilter | string
+    transports?: StringNullableListFilter
+    user?: XOR<UserRelationFilter, UserWhereInput>
+  }
+
+  export type PasskeyOrderByWithRelationInput = {
+    id?: SortOrder
+    credentialId?: SortOrder
+    userId?: SortOrder
+    publicKey?: SortOrder
+    transports?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type PasskeyWhereUniqueInput = {
+    id?: number
+  }
+
+  export type PasskeyOrderByWithAggregationInput = {
+    id?: SortOrder
+    credentialId?: SortOrder
+    userId?: SortOrder
+    publicKey?: SortOrder
+    transports?: SortOrder
+    _count?: PasskeyCountOrderByAggregateInput
+    _avg?: PasskeyAvgOrderByAggregateInput
+    _max?: PasskeyMaxOrderByAggregateInput
+    _min?: PasskeyMinOrderByAggregateInput
+    _sum?: PasskeySumOrderByAggregateInput
+  }
+
+  export type PasskeyScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<PasskeyScalarWhereWithAggregatesInput>
+    OR?: Enumerable<PasskeyScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<PasskeyScalarWhereWithAggregatesInput>
+    id?: IntWithAggregatesFilter | number
+    credentialId?: StringWithAggregatesFilter | string
+    userId?: IntWithAggregatesFilter | number
+    publicKey?: StringWithAggregatesFilter | string
+    transports?: StringNullableListFilter
+  }
+
   export type UserCreateInput = {
     email: string
     name?: string | null
     password_digest: string
+    passkeys?: PasskeyCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -1861,12 +3075,14 @@ export namespace Prisma {
     email: string
     name?: string | null
     password_digest: string
+    passkeys?: PasskeyUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     password_digest?: StringFieldUpdateOperationsInput | string
+    passkeys?: PasskeyUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -1874,6 +3090,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     password_digest?: StringFieldUpdateOperationsInput | string
+    passkeys?: PasskeyUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -1894,6 +3111,58 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     password_digest?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PasskeyCreateInput = {
+    credentialId: string
+    publicKey: string
+    transports?: PasskeyCreatetransportsInput | Enumerable<string>
+    user: UserCreateNestedOneWithoutPasskeysInput
+  }
+
+  export type PasskeyUncheckedCreateInput = {
+    id?: number
+    credentialId: string
+    userId: number
+    publicKey: string
+    transports?: PasskeyCreatetransportsInput | Enumerable<string>
+  }
+
+  export type PasskeyUpdateInput = {
+    credentialId?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    transports?: PasskeyUpdatetransportsInput | Enumerable<string>
+    user?: UserUpdateOneRequiredWithoutPasskeysNestedInput
+  }
+
+  export type PasskeyUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    credentialId?: StringFieldUpdateOperationsInput | string
+    userId?: IntFieldUpdateOperationsInput | number
+    publicKey?: StringFieldUpdateOperationsInput | string
+    transports?: PasskeyUpdatetransportsInput | Enumerable<string>
+  }
+
+  export type PasskeyCreateManyInput = {
+    id?: number
+    credentialId: string
+    userId: number
+    publicKey: string
+    transports?: PasskeyCreatetransportsInput | Enumerable<string>
+  }
+
+  export type PasskeyUpdateManyMutationInput = {
+    credentialId?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    transports?: PasskeyUpdatetransportsInput | Enumerable<string>
+  }
+
+  export type PasskeyUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    credentialId?: StringFieldUpdateOperationsInput | string
+    userId?: IntFieldUpdateOperationsInput | number
+    publicKey?: StringFieldUpdateOperationsInput | string
+    transports?: PasskeyUpdatetransportsInput | Enumerable<string>
   }
 
   export type IntFilter = {
@@ -1935,6 +3204,16 @@ export namespace Prisma {
     endsWith?: string
     mode?: QueryMode
     not?: NestedStringNullableFilter | string | null
+  }
+
+  export type PasskeyListRelationFilter = {
+    every?: PasskeyWhereInput
+    some?: PasskeyWhereInput
+    none?: PasskeyWhereInput
+  }
+
+  export type PasskeyOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type UserCountOrderByAggregateInput = {
@@ -2018,6 +3297,65 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter
   }
 
+  export type StringNullableListFilter = {
+    equals?: Enumerable<string> | null
+    has?: string | null
+    hasEvery?: Enumerable<string>
+    hasSome?: Enumerable<string>
+    isEmpty?: boolean
+  }
+
+  export type UserRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type PasskeyCountOrderByAggregateInput = {
+    id?: SortOrder
+    credentialId?: SortOrder
+    userId?: SortOrder
+    publicKey?: SortOrder
+    transports?: SortOrder
+  }
+
+  export type PasskeyAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type PasskeyMaxOrderByAggregateInput = {
+    id?: SortOrder
+    credentialId?: SortOrder
+    userId?: SortOrder
+    publicKey?: SortOrder
+  }
+
+  export type PasskeyMinOrderByAggregateInput = {
+    id?: SortOrder
+    credentialId?: SortOrder
+    userId?: SortOrder
+    publicKey?: SortOrder
+  }
+
+  export type PasskeySumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type PasskeyCreateNestedManyWithoutUserInput = {
+    create?: XOR<Enumerable<PasskeyCreateWithoutUserInput>, Enumerable<PasskeyUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<PasskeyCreateOrConnectWithoutUserInput>
+    createMany?: PasskeyCreateManyUserInputEnvelope
+    connect?: Enumerable<PasskeyWhereUniqueInput>
+  }
+
+  export type PasskeyUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<Enumerable<PasskeyCreateWithoutUserInput>, Enumerable<PasskeyUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<PasskeyCreateOrConnectWithoutUserInput>
+    createMany?: PasskeyCreateManyUserInputEnvelope
+    connect?: Enumerable<PasskeyWhereUniqueInput>
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -2026,12 +3364,63 @@ export namespace Prisma {
     set?: string | null
   }
 
+  export type PasskeyUpdateManyWithoutUserNestedInput = {
+    create?: XOR<Enumerable<PasskeyCreateWithoutUserInput>, Enumerable<PasskeyUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<PasskeyCreateOrConnectWithoutUserInput>
+    upsert?: Enumerable<PasskeyUpsertWithWhereUniqueWithoutUserInput>
+    createMany?: PasskeyCreateManyUserInputEnvelope
+    set?: Enumerable<PasskeyWhereUniqueInput>
+    disconnect?: Enumerable<PasskeyWhereUniqueInput>
+    delete?: Enumerable<PasskeyWhereUniqueInput>
+    connect?: Enumerable<PasskeyWhereUniqueInput>
+    update?: Enumerable<PasskeyUpdateWithWhereUniqueWithoutUserInput>
+    updateMany?: Enumerable<PasskeyUpdateManyWithWhereWithoutUserInput>
+    deleteMany?: Enumerable<PasskeyScalarWhereInput>
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type PasskeyUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<Enumerable<PasskeyCreateWithoutUserInput>, Enumerable<PasskeyUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<PasskeyCreateOrConnectWithoutUserInput>
+    upsert?: Enumerable<PasskeyUpsertWithWhereUniqueWithoutUserInput>
+    createMany?: PasskeyCreateManyUserInputEnvelope
+    set?: Enumerable<PasskeyWhereUniqueInput>
+    disconnect?: Enumerable<PasskeyWhereUniqueInput>
+    delete?: Enumerable<PasskeyWhereUniqueInput>
+    connect?: Enumerable<PasskeyWhereUniqueInput>
+    update?: Enumerable<PasskeyUpdateWithWhereUniqueWithoutUserInput>
+    updateMany?: Enumerable<PasskeyUpdateManyWithWhereWithoutUserInput>
+    deleteMany?: Enumerable<PasskeyScalarWhereInput>
+  }
+
+  export type PasskeyCreatetransportsInput = {
+    set: Enumerable<string>
+  }
+
+  export type UserCreateNestedOneWithoutPasskeysInput = {
+    create?: XOR<UserCreateWithoutPasskeysInput, UserUncheckedCreateWithoutPasskeysInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPasskeysInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type PasskeyUpdatetransportsInput = {
+    set?: Enumerable<string>
+    push?: string | Enumerable<string>
+  }
+
+  export type UserUpdateOneRequiredWithoutPasskeysNestedInput = {
+    create?: XOR<UserCreateWithoutPasskeysInput, UserUncheckedCreateWithoutPasskeysInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPasskeysInput
+    upsert?: UserUpsertWithoutPasskeysInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<UserUpdateWithoutPasskeysInput, UserUncheckedUpdateWithoutPasskeysInput>
   }
 
   export type NestedIntFilter = {
@@ -2143,6 +3532,119 @@ export namespace Prisma {
     gt?: number
     gte?: number
     not?: NestedIntNullableFilter | number | null
+  }
+
+  export type PasskeyCreateWithoutUserInput = {
+    credentialId: string
+    publicKey: string
+    transports?: PasskeyCreatetransportsInput | Enumerable<string>
+  }
+
+  export type PasskeyUncheckedCreateWithoutUserInput = {
+    id?: number
+    credentialId: string
+    publicKey: string
+    transports?: PasskeyCreatetransportsInput | Enumerable<string>
+  }
+
+  export type PasskeyCreateOrConnectWithoutUserInput = {
+    where: PasskeyWhereUniqueInput
+    create: XOR<PasskeyCreateWithoutUserInput, PasskeyUncheckedCreateWithoutUserInput>
+  }
+
+  export type PasskeyCreateManyUserInputEnvelope = {
+    data: Enumerable<PasskeyCreateManyUserInput>
+    skipDuplicates?: boolean
+  }
+
+  export type PasskeyUpsertWithWhereUniqueWithoutUserInput = {
+    where: PasskeyWhereUniqueInput
+    update: XOR<PasskeyUpdateWithoutUserInput, PasskeyUncheckedUpdateWithoutUserInput>
+    create: XOR<PasskeyCreateWithoutUserInput, PasskeyUncheckedCreateWithoutUserInput>
+  }
+
+  export type PasskeyUpdateWithWhereUniqueWithoutUserInput = {
+    where: PasskeyWhereUniqueInput
+    data: XOR<PasskeyUpdateWithoutUserInput, PasskeyUncheckedUpdateWithoutUserInput>
+  }
+
+  export type PasskeyUpdateManyWithWhereWithoutUserInput = {
+    where: PasskeyScalarWhereInput
+    data: XOR<PasskeyUpdateManyMutationInput, PasskeyUncheckedUpdateManyWithoutPasskeysInput>
+  }
+
+  export type PasskeyScalarWhereInput = {
+    AND?: Enumerable<PasskeyScalarWhereInput>
+    OR?: Enumerable<PasskeyScalarWhereInput>
+    NOT?: Enumerable<PasskeyScalarWhereInput>
+    id?: IntFilter | number
+    credentialId?: StringFilter | string
+    userId?: IntFilter | number
+    publicKey?: StringFilter | string
+    transports?: StringNullableListFilter
+  }
+
+  export type UserCreateWithoutPasskeysInput = {
+    email: string
+    name?: string | null
+    password_digest: string
+  }
+
+  export type UserUncheckedCreateWithoutPasskeysInput = {
+    id?: number
+    email: string
+    name?: string | null
+    password_digest: string
+  }
+
+  export type UserCreateOrConnectWithoutPasskeysInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPasskeysInput, UserUncheckedCreateWithoutPasskeysInput>
+  }
+
+  export type UserUpsertWithoutPasskeysInput = {
+    update: XOR<UserUpdateWithoutPasskeysInput, UserUncheckedUpdateWithoutPasskeysInput>
+    create: XOR<UserCreateWithoutPasskeysInput, UserUncheckedCreateWithoutPasskeysInput>
+  }
+
+  export type UserUpdateWithoutPasskeysInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    password_digest?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type UserUncheckedUpdateWithoutPasskeysInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    password_digest?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PasskeyCreateManyUserInput = {
+    id?: number
+    credentialId: string
+    publicKey: string
+    transports?: PasskeyCreatetransportsInput | Enumerable<string>
+  }
+
+  export type PasskeyUpdateWithoutUserInput = {
+    credentialId?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    transports?: PasskeyUpdatetransportsInput | Enumerable<string>
+  }
+
+  export type PasskeyUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    credentialId?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    transports?: PasskeyUpdatetransportsInput | Enumerable<string>
+  }
+
+  export type PasskeyUncheckedUpdateManyWithoutPasskeysInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    credentialId?: StringFieldUpdateOperationsInput | string
+    publicKey?: StringFieldUpdateOperationsInput | string
+    transports?: PasskeyUpdatetransportsInput | Enumerable<string>
   }
 
 
