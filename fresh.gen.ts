@@ -4,20 +4,28 @@
 
 import config from "./deno.json" assert { type: "json" };
 import * as $0 from "./routes/[name].tsx";
-import * as $1 from "./routes/api/joke.ts";
-import * as $2 from "./routes/index.tsx";
-import * as $3 from "./routes/signup.tsx";
+import * as $1 from "./routes/account.tsx";
+import * as $2 from "./routes/api/joke.ts";
+import * as $3 from "./routes/api/passkey/create.ts";
+import * as $4 from "./routes/api/user.ts";
+import * as $5 from "./routes/index.tsx";
+import * as $6 from "./routes/signup.tsx";
 import * as $$0 from "./islands/Counter.tsx";
+import * as $$1 from "./islands/Passkey.tsx";
 
 const manifest = {
   routes: {
     "./routes/[name].tsx": $0,
-    "./routes/api/joke.ts": $1,
-    "./routes/index.tsx": $2,
-    "./routes/signup.tsx": $3,
+    "./routes/account.tsx": $1,
+    "./routes/api/joke.ts": $2,
+    "./routes/api/passkey/create.ts": $3,
+    "./routes/api/user.ts": $4,
+    "./routes/index.tsx": $5,
+    "./routes/signup.tsx": $6,
   },
   islands: {
     "./islands/Counter.tsx": $$0,
+    "./islands/Passkey.tsx": $$1,
   },
   baseUrl: import.meta.url,
   config,

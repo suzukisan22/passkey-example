@@ -71,8 +71,8 @@ export default function Passkey({cookie}: PasskeyProps) {
     console.log(encode(credential.response.clientDataJSON))
     const requestData = {
       publicKey: encode(credential.response.getPublicKey()),
-      passkey,
-      platform: credential.response.getTransports()
+      credentialId: passkey,
+      transports: credential.response.getTransports()
     }
 
     const responseCreate = await fetch('http://localhost:8000/api/passkey/create', {

@@ -3,7 +3,7 @@
  * Client
 **/
 
-import * as runtime from './runtime/index';
+import * as runtime from './runtime/index.d.ts';
 declare const prisma: unique symbol
 export type PrismaPromise<A> = Promise<A> & {[prisma]: true}
 type UnwrapPromise<P extends any> = P extends Promise<infer R> ? R : P
