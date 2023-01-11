@@ -63,12 +63,6 @@ export default function Passkey({cookie}: PasskeyProps) {
     if (!credential) { return ;}
 
     const passkey = credential.id
-    console.log(passkey)
-    console.log(encode(credential.rawId))
-    console.log(credential.response.getTransports())
-    console.log(encode(credential.response.getPublicKey()))
-    console.log(encode(credential.response.attestationObject))
-    console.log(encode(credential.response.clientDataJSON))
     const requestData = {
       publicKey: encode(credential.response.getPublicKey()),
       credentialId: passkey,
