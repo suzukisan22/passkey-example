@@ -5,6 +5,9 @@ import { Prisma } from '../generated/client/index.d.ts';
 import { getCookies, setCookie } from "https://deno.land/std@0.167.0/http/cookie.ts";
 import { create, decode } from "https://deno.land/x/djwt@v2.8/mod.ts";
 import * as bcrypt from "https://deno.land/x/bcrypt@v0.3.0/mod.ts";
+import {
+  encode as base64urlEncode,
+} from "https://deno.land/std@0.167.0/encoding/base64url.ts";
 
 
 const prisma = new PrismaClient();
@@ -63,7 +66,7 @@ export const handler: Handlers<UserInput> = {
       return new Response("", {
         status: 303,
         headers: { Location: req.referrer },
-      });  
+      });
     }
 
     return new Response("", {
@@ -96,11 +99,23 @@ export const handler: Handlers<UserInput> = {
        });
     }
 
+    const createUuid = () => {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(a) {
+          let r = (new Date().getTime() + Math.random() * 16)%16 | 0, v = a == 'x' ? r : (r & 0x3 | 0x8);
+          return v.toString(16);
+       });
+    }
+
+    const uuid = createUuid()
+
     const user = {
       email,
       password_digest: await bcrypt.hash(password),
+      passkey_uuid: uuid,
       name: data.get('name')
     } as Prisma.UserCreateInput
+
+    console.log
 
     const userResponse = await prisma.user.create({
       data: user

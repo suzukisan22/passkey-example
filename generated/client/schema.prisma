@@ -12,6 +12,7 @@ datasource db {
 model User {
   id              Int      @id @default(autoincrement())
   email           String   @unique
+  passkey_uuid         String   @default(uuid())
   name            String?
   password_digest String
   passkeys        Passkey[]

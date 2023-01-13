@@ -36,6 +36,14 @@ export default function Passkey({cookie}: PasskeyProps) {
 
     const responseBody = await resp.json()
 
+    const string_to_buffer = (src: string) => {
+      return (new Uint8Array([].map.call(src, function(c) {
+        return c.charCodeAt(0)
+      }))).buffer;
+    }
+
+    console.log(responseBody)
+
     const credential = await navigator.credentials.create({  
       publicKey: {  
         challenge: new Uint8Array(16),
@@ -43,7 +51,7 @@ export default function Passkey({cookie}: PasskeyProps) {
           name: "PasskeyExample"
         },
         user: {  
-          id: decode(encode(responseBody.email)),
+          id: string_to_buffer(responseBody.passkey_uuid),
           name: responseBody.email,
           displayName: responseBody.email
         }, 

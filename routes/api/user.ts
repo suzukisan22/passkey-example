@@ -30,7 +30,7 @@ export const handler = {
     const [_header, payload, _signature] = decode(jwt)
     const castedPayload = payload as JwtPayload;
 
-    const user = await prisma.user.findFirst({where: {id: castedPayload.userId}, select: {id: true, email: true, name: true}}) as UserResponse
+    const user = await prisma.user.findFirst({where: {id: castedPayload.userId}, select: {id: true, email: true, name: true, passkey_uuid: true}}) as UserResponse
 
     return new Response(JSON.stringify({...user}), {headers: {"Content-Type": "application/json"}});
   }

@@ -9,9 +9,12 @@ import * as $2 from "./routes/api/joke.ts";
 import * as $3 from "./routes/api/passkey/create.ts";
 import * as $4 from "./routes/api/user.ts";
 import * as $5 from "./routes/index.tsx";
-import * as $6 from "./routes/signup.tsx";
+import * as $6 from "./routes/login.tsx";
+import * as $7 from "./routes/login_by_passkey.tsx";
+import * as $8 from "./routes/signup.tsx";
 import * as $$0 from "./islands/Counter.tsx";
-import * as $$1 from "./islands/Passkey.tsx";
+import * as $$1 from "./islands/LoginPasskeyForm.tsx";
+import * as $$2 from "./islands/Passkey.tsx";
 
 const manifest = {
   routes: {
@@ -21,11 +24,14 @@ const manifest = {
     "./routes/api/passkey/create.ts": $3,
     "./routes/api/user.ts": $4,
     "./routes/index.tsx": $5,
-    "./routes/signup.tsx": $6,
+    "./routes/login.tsx": $6,
+    "./routes/login_by_passkey.tsx": $7,
+    "./routes/signup.tsx": $8,
   },
   islands: {
     "./islands/Counter.tsx": $$0,
-    "./islands/Passkey.tsx": $$1,
+    "./islands/LoginPasskeyForm.tsx": $$1,
+    "./islands/Passkey.tsx": $$2,
   },
   baseUrl: import.meta.url,
   config,

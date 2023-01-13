@@ -19,6 +19,7 @@ type UnwrapTuple<Tuple extends readonly unknown[]> = {
 export type User = {
   id: number
   email: string
+  passkey_uuid: string
   name: string | null
   password_digest: string
 }
@@ -893,6 +894,7 @@ export namespace Prisma {
   export type UserMinAggregateOutputType = {
     id: number | null
     email: string | null
+    passkey_uuid: string | null
     name: string | null
     password_digest: string | null
   }
@@ -900,6 +902,7 @@ export namespace Prisma {
   export type UserMaxAggregateOutputType = {
     id: number | null
     email: string | null
+    passkey_uuid: string | null
     name: string | null
     password_digest: string | null
   }
@@ -907,6 +910,7 @@ export namespace Prisma {
   export type UserCountAggregateOutputType = {
     id: number
     email: number
+    passkey_uuid: number
     name: number
     password_digest: number
     _all: number
@@ -924,6 +928,7 @@ export namespace Prisma {
   export type UserMinAggregateInputType = {
     id?: true
     email?: true
+    passkey_uuid?: true
     name?: true
     password_digest?: true
   }
@@ -931,6 +936,7 @@ export namespace Prisma {
   export type UserMaxAggregateInputType = {
     id?: true
     email?: true
+    passkey_uuid?: true
     name?: true
     password_digest?: true
   }
@@ -938,6 +944,7 @@ export namespace Prisma {
   export type UserCountAggregateInputType = {
     id?: true
     email?: true
+    passkey_uuid?: true
     name?: true
     password_digest?: true
     _all?: true
@@ -1038,6 +1045,7 @@ export namespace Prisma {
   export type UserGroupByOutputType = {
     id: number
     email: string
+    passkey_uuid: string
     name: string | null
     password_digest: string
     _count: UserCountAggregateOutputType | null
@@ -1064,6 +1072,7 @@ export namespace Prisma {
   export type UserSelect = {
     id?: boolean
     email?: boolean
+    passkey_uuid?: boolean
     name?: boolean
     password_digest?: boolean
     passkeys?: boolean | PasskeyFindManyArgs
@@ -2956,6 +2965,7 @@ export namespace Prisma {
   export const UserScalarFieldEnum: {
     id: 'id',
     email: 'email',
+    passkey_uuid: 'passkey_uuid',
     name: 'name',
     password_digest: 'password_digest'
   };
@@ -2974,6 +2984,7 @@ export namespace Prisma {
     NOT?: Enumerable<UserWhereInput>
     id?: IntFilter | number
     email?: StringFilter | string
+    passkey_uuid?: StringFilter | string
     name?: StringNullableFilter | string | null
     password_digest?: StringFilter | string
     passkeys?: PasskeyListRelationFilter
@@ -2982,6 +2993,7 @@ export namespace Prisma {
   export type UserOrderByWithRelationInput = {
     id?: SortOrder
     email?: SortOrder
+    passkey_uuid?: SortOrder
     name?: SortOrder
     password_digest?: SortOrder
     passkeys?: PasskeyOrderByRelationAggregateInput
@@ -2995,6 +3007,7 @@ export namespace Prisma {
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
     email?: SortOrder
+    passkey_uuid?: SortOrder
     name?: SortOrder
     password_digest?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -3010,6 +3023,7 @@ export namespace Prisma {
     NOT?: Enumerable<UserScalarWhereWithAggregatesInput>
     id?: IntWithAggregatesFilter | number
     email?: StringWithAggregatesFilter | string
+    passkey_uuid?: StringWithAggregatesFilter | string
     name?: StringNullableWithAggregatesFilter | string | null
     password_digest?: StringWithAggregatesFilter | string
   }
@@ -3065,6 +3079,7 @@ export namespace Prisma {
 
   export type UserCreateInput = {
     email: string
+    passkey_uuid?: string
     name?: string | null
     password_digest: string
     passkeys?: PasskeyCreateNestedManyWithoutUserInput
@@ -3073,6 +3088,7 @@ export namespace Prisma {
   export type UserUncheckedCreateInput = {
     id?: number
     email: string
+    passkey_uuid?: string
     name?: string | null
     password_digest: string
     passkeys?: PasskeyUncheckedCreateNestedManyWithoutUserInput
@@ -3080,6 +3096,7 @@ export namespace Prisma {
 
   export type UserUpdateInput = {
     email?: StringFieldUpdateOperationsInput | string
+    passkey_uuid?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     password_digest?: StringFieldUpdateOperationsInput | string
     passkeys?: PasskeyUpdateManyWithoutUserNestedInput
@@ -3088,6 +3105,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     email?: StringFieldUpdateOperationsInput | string
+    passkey_uuid?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     password_digest?: StringFieldUpdateOperationsInput | string
     passkeys?: PasskeyUncheckedUpdateManyWithoutUserNestedInput
@@ -3096,12 +3114,14 @@ export namespace Prisma {
   export type UserCreateManyInput = {
     id?: number
     email: string
+    passkey_uuid?: string
     name?: string | null
     password_digest: string
   }
 
   export type UserUpdateManyMutationInput = {
     email?: StringFieldUpdateOperationsInput | string
+    passkey_uuid?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     password_digest?: StringFieldUpdateOperationsInput | string
   }
@@ -3109,6 +3129,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     email?: StringFieldUpdateOperationsInput | string
+    passkey_uuid?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     password_digest?: StringFieldUpdateOperationsInput | string
   }
@@ -3219,6 +3240,7 @@ export namespace Prisma {
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
+    passkey_uuid?: SortOrder
     name?: SortOrder
     password_digest?: SortOrder
   }
@@ -3230,6 +3252,7 @@ export namespace Prisma {
   export type UserMaxOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
+    passkey_uuid?: SortOrder
     name?: SortOrder
     password_digest?: SortOrder
   }
@@ -3237,6 +3260,7 @@ export namespace Prisma {
   export type UserMinOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
+    passkey_uuid?: SortOrder
     name?: SortOrder
     password_digest?: SortOrder
   }
@@ -3586,6 +3610,7 @@ export namespace Prisma {
 
   export type UserCreateWithoutPasskeysInput = {
     email: string
+    passkey_uuid?: string
     name?: string | null
     password_digest: string
   }
@@ -3593,6 +3618,7 @@ export namespace Prisma {
   export type UserUncheckedCreateWithoutPasskeysInput = {
     id?: number
     email: string
+    passkey_uuid?: string
     name?: string | null
     password_digest: string
   }
@@ -3609,6 +3635,7 @@ export namespace Prisma {
 
   export type UserUpdateWithoutPasskeysInput = {
     email?: StringFieldUpdateOperationsInput | string
+    passkey_uuid?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     password_digest?: StringFieldUpdateOperationsInput | string
   }
@@ -3616,6 +3643,7 @@ export namespace Prisma {
   export type UserUncheckedUpdateWithoutPasskeysInput = {
     id?: IntFieldUpdateOperationsInput | number
     email?: StringFieldUpdateOperationsInput | string
+    passkey_uuid?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     password_digest?: StringFieldUpdateOperationsInput | string
   }
