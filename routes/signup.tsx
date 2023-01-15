@@ -161,7 +161,7 @@ export default function Signup({ data }: PageProps<UserInput>) {
       </Head>
       <div class="p-4 mx-auto max-w-screen-md">
         {data.message && <p>{data.message}</p>}
-        <form method='post'>
+        <form method='post' action='/signup'>
           <div>
             <label>
               email: 
