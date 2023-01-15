@@ -115,8 +115,6 @@ export const handler: Handlers<UserInput> = {
       name: data.get('name')
     } as Prisma.UserCreateInput
 
-    console.log
-
     const userResponse = await prisma.user.create({
       data: user
     })

@@ -15,13 +15,11 @@ type UserResponse = Omit<User, 'password_digest'>;
 export const handler = {
   async POST(req: Request, ctx: HandlerContext) {
     const auth = req.headers.get('Authorization')
-    console.log(auth)
     if (!auth) {
       return new Response(JSON.stringify({error: 'bad request'}), {headers: {"Content-Type": "application/json"}});
     }
 
     const jwt = auth.split(' ')[1];
-    console.log("jwt:" + jwt )
     if (!jwt) {
       console.log("jwt Noting" )
       return;

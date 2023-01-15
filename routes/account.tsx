@@ -2,6 +2,7 @@ import { Head } from "$fresh/runtime.ts";
 import Passkey from "../islands/Passkey.tsx";
 import { HandlerContext, PageProps } from "$fresh/server.ts";
 import { getCookies } from "https://deno.land/std@0.167.0/http/cookie.ts";
+import "https://deno.land/x/dotenv/load.ts";
 
 type AccountProps = {
   cookie: string;

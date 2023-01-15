@@ -9,7 +9,7 @@ type PasskeyProps = {
   cookie: string;
 }
 
-export default function Passkey({cookie}: PasskeyProps) {
+export default function Passkey({cookie}:PasskeyProps) {
   const [isAvailablePasskey, setIsAvailablePasskey] = useState(false);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function Passkey({cookie}: PasskeyProps) {
 
   const createPasskey = async () => {
     // ログイン中のユーザーの情報を持ってくる
-    const resp = await fetch('http://localhost:8000/api/user', {
+    const resp = await fetch('/api/user', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${cookie}`
@@ -42,18 +42,17 @@ export default function Passkey({cookie}: PasskeyProps) {
       }))).buffer;
     }
 
-    console.log(responseBody)
-
     const credential = await navigator.credentials.create({  
       publicKey: {  
         challenge: new Uint8Array(16),
-        rp: {  
+        rp: {
+          id: location.host == 'localhost:8000' ? 'localhost' : location.host,
           name: "PasskeyExample"
         },
         user: {  
           id: string_to_buffer(responseBody.passkey_uuid),
           name: responseBody.email,
-          displayName: responseBody.email
+          displayName: responseBody.name
         }, 
         pubKeyCredParams: [{alg: -7, type: "public-key"},{alg: -257, type: "public-key"}],
         excludeCredentials: [{
@@ -77,7 +76,7 @@ export default function Passkey({cookie}: PasskeyProps) {
       transports: credential.response.getTransports()
     }
 
-    const responseCreate = await fetch('http://localhost:8000/api/passkey/create', {
+    const responseCreate = await fetch('/api/passkey/create', {
       method: 'POST',
       body: JSON.stringify(requestData),
       headers: {
