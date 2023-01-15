@@ -4,7 +4,7 @@ import { PrismaClient } from '../generated/client/deno/edge.ts';
 import { Prisma } from '../generated/client/index.d.ts';
 import { getCookies, setCookie } from "https://deno.land/std@0.167.0/http/cookie.ts";
 import { create, decode } from "https://deno.land/x/djwt@v2.8/mod.ts";
-import * as bcrypt from "https://deno.land/x/bcrypt@v0.3.0/mod.ts";
+import * as bcrypt from "bcrypt";
 import {
   encode as base64urlEncode,
 } from "https://deno.land/std@0.167.0/encoding/base64url.ts";
